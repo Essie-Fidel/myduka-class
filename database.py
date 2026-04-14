@@ -1,0 +1,144 @@
+import psycopg2
+
+
+conn = psycopg2.connect(host='localhost', port='5432',
+                        user='postgres', password='2510', dbname='myduka_db')
+
+cur = conn.cursor()
+# # cur.execute("select * from products")
+# # products = cur.fetchall()
+# # print(products)
+# # cur.execute("select * from sales")
+# # sales = cur.fetchall()
+# # print(sales)
+# # cur.execute("select * from stock")
+# # stock = cur.fetchall()
+# # print(stock)
+
+
+# # def all_products():
+# #     cur = conn.cursor()
+# #     cur.execute("select * from products")
+# #     products = cur.fetchall()
+# #     return products
+
+
+# # print(all_products())
+
+
+# # def all_sales():
+# #     cur = conn.cursor()
+# #     cur.execute("select * from sales")
+# #     sales = cur.fetchall()
+# #     return sales
+
+
+# # print(all_sales())
+
+
+# # def the_stock():
+# #     cur = conn.cursor()
+# #     cur.execute("select *  from stock")
+# #     stock = cur.fetchall()
+# #     return stock
+
+
+# # print(the_stock())
+
+
+# def get_data(table):
+#     cur.execute(f"select * from {table}")
+#     data = cur.fetchall()
+#     return data
+
+
+# products = get_data('products')
+# print(products)
+
+
+# def insert_products(product_details):
+#     cur.execute(
+#         f"insert into products(name, buying_price, selling_price)values {product_details}")
+#     conn.commit()
+
+
+# product1 = ('HP laptop', 43000, 60000)
+# product2 = ('Dell monitor', 55000, 75000)
+
+# insert_products(product1)
+# insert_products(product2)
+
+# def insert_sales(sales_details):
+#     cur.execute(
+#         f"insert into sales(products_id,quantity)values{sales_details}")
+#     conn.commit()
+
+
+# sales1 = (10, 5)
+# sales2 = (1, 3)
+
+# insert_sales(sales1)
+# insert_sales(sales2)
+
+
+# def insert_stock(stock_details):
+#     cur.execute(
+#         f"insert into stock(products_id,stock_quantity)values{stock_details}")
+#     conn.commit()
+
+
+# stock1 = (6, 4)
+# stock2 = (8, 2)
+
+# insert_stock(stock1)
+# insert_stock(stock2)
+
+
+def insert_users(users_details):
+    cur.execute(
+        f"insert into users(full_name,email,phone_number,password)values{users_details}")
+    conn.commit()
+
+
+user1 = ('Regina W.', 'reggy@gmail.com', '0786541211', 'pass786')
+user2 = ('Fidelia Wambui', 'wambu@gmail.com', '0798453210', 'pass434')
+
+# insert_users(user1)
+# insert_users(user2)
+
+# TASK
+# 2.Write sql queries to fetch the following:
+# (i)sales_per_product
+# select products.name, sum(products.selling_price * sales.quantity) as total_sales from products join sales on products.id = sales.products_id group by products.name;
+# (ii)sales_per_day
+# select date(sales.created_at) as day, sum(products.selling_price * sales.quantity) as total_sales from products join sales on products.id = sales.products_id group by day;
+# (iii)profit_per_product
+# select products.name, sum(selling_price-buying_price) as profit from products group by products.name
+# (iv)sales_per_day
+# select date(sales.created_at) as day, sum(selling_price-buying_price)as total_profit from products join sales on products.id = sales.products_id group by day;
+
+
+def sales_per_product():
+    cur.execute('''select products.name, sum(products.selling_price * sales.quantity) as total_sales from products join sales on products.id = sales.products_id group by products.name;''')
+    product_sales = cur.fetchall()
+    return product_sales
+
+
+def sales_per_day():
+    cur.execute("""select date(sales.created_at) as day, sum(products.selling_price * sales.quantity) as total_sales from products join sales on products.id = sales.products_id group by day;""")
+    inday_sales = cur.fetchall()
+    return inday_sales
+
+
+def profit_per_product():
+    cur.execute(
+        """select products.name, sum(selling_price-buying_price) as profit from products group by products.name;""")
+    product_profit = cur.fetchall()
+    return product_profit
+
+
+def profit_per_day():
+    cur.execute("""select date(sales.created_at) as day, sum(selling_price-buying_price)as total_profit from products join sales on products.id = sales.products_id group by day;
+""")
+    inday_profit = cur.fetchall()
+    return inday_profit
