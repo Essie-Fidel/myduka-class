@@ -30,7 +30,7 @@ person2.sleep()
 person2.code()
 
 
-#    Task
+#    Task1
 class Bank_Account:
     def __init__(self, account_number, owner_name, balance, date_opened):
         self.account_number = account_number
@@ -45,7 +45,8 @@ class Bank_Account:
         print(f"{self.owner_name} has made a withdrawal")
 
     def display_info(self):
-        print(f"{self.owner_name} {self.account_number} {self.balance}")
+        print(
+            f"Account details: {self.owner_name} {self.account_number} {self.balance}")
 
 
 Bank_Account1 = Bank_Account('B400987', "Oliver Smith", 980000, "2025-03-09")
@@ -61,3 +62,77 @@ Bank_Account2 = Bank_Account(
 print(type(Bank_Account2))
 Bank_Account2.withdraw()
 Bank_Account2.display_info()
+
+# task2
+# Create a Car Class Have the following attributes brand - model - year - fuel_capcity - fuel_level - is_running(boolen value)
+# Have the following methods as behaviour for your class: start() stop() refuel() drive() display_car_info()
+
+
+class Car:
+    def __init__(self, brand, model, year, fuel_capacity):
+        self.brand = brand
+        self.model = model
+        self.year = year
+        self.fuel_capacity = fuel_capacity
+        self.fuel_level = 0
+        self.is_running = False
+
+    def start(self):
+        if self.fuel_level > 0:
+            self.is_running = True
+            print(f"{self.brand} {self.model} has started")
+        else:
+            print(f"{self.brand} {self.model} cannot start; tank is empty")
+
+    def stop(self):
+        if self.is_running:
+            self.is_running = False
+            print(f"{self.brand} {self.model} has stopped")
+        else:
+            print("Car is already stopped")
+
+    def refuel(self, amount):
+        if self.fuel_level + amount <= self.fuel_capacity:
+            self.fuel_level += amount
+            print(f"Refueled {amount}L. Fuel level: {self.fuel_level}L")
+        else:
+            print("Cannot exceed fuel capacity")
+
+    def drive(self, distance):
+        if not self.is_running:
+            print("Start the car first")
+        else:
+            fuel_needed = distance
+            if fuel_needed > self.fuel_level:
+                print("Not enough fuel to drive")
+            else:
+                self.fuel_level -= fuel_needed
+                print(
+                    f"Drove {distance} km. Fuel left: {self.fuel_level:.2f}L")
+
+    def display_info(self):
+        print(f"""
+Car Details:
+Brand: {self.brand}
+Model: {self.model}
+Year: {self.year}
+Fuel Capacity: {self.fuel_capacity}L
+Fuel Level: {self.fuel_level}L
+Running: {self.is_running}
+""")
+
+
+car1 = Car("Toyota", "Corolla", 2020, 50)
+
+car1.start()
+car1.refuel(20)
+car1.start()
+car1.drive(50)
+car1.stop()
+car1.display_info()
+
+car2 = Car("Ford", "Ranger", 2023, 80)
+car2.refuel(20)
+car2.start()
+car2.drive(4)
+car2.stop()
