@@ -16,24 +16,24 @@ cur = conn.cursor()
 # # print(stock)
 
 
-# # def all_products():
-# #     cur = conn.cursor()
-# #     cur.execute("select * from products")
-# #     products = cur.fetchall()
-# #     return products
+def all_products():
+    cur = conn.cursor()
+    cur.execute("select * from products")
+    products = cur.fetchall()
+    return products
 
 
-# # print(all_products())
+print(all_products())
 
 
-# # def all_sales():
-# #     cur = conn.cursor()
-# #     cur.execute("select * from sales")
-# #     sales = cur.fetchall()
-# #     return sales
+def all_sales():
+    cur = conn.cursor()
+    cur.execute("select * from sales")
+    sales = cur.fetchall()
+    return sales
 
 
-# # print(all_sales())
+print(all_sales())
 
 
 # # def the_stock():
