@@ -16,26 +16,6 @@ cur = conn.cursor()
 # # print(stock)
 
 
-def all_products():
-    cur = conn.cursor()
-    cur.execute("select * from products")
-    products = cur.fetchall()
-    return products
-
-
-print(all_products())
-
-
-def all_sales():
-    cur = conn.cursor()
-    cur.execute("select * from sales")
-    sales = cur.fetchall()
-    return sales
-
-
-print(all_sales())
-
-
 # # def the_stock():
 # #     cur = conn.cursor()
 # #     cur.execute("select *  from stock")
@@ -58,7 +38,9 @@ print(all_sales())
 
 # def insert_products(product_details):
 #     cur.execute(
-#         f"insert into products(name, buying_price, selling_price)values {product_details}")
+#         "INSERT INTO products (name, buying_price, selling_price) VALUES (%s, %s, %s)",
+#         product_details
+#     )
 #     conn.commit()
 
 
@@ -68,7 +50,7 @@ print(all_sales())
 # insert_products(product1)
 # insert_products(product2)
 
-# def insert_sales(sales_details):
+# # def insert_sales(sales_details):
 #     cur.execute(
 #         f"insert into sales(products_id,quantity)values{sales_details}")
 #     conn.commit()
@@ -170,27 +152,94 @@ user2 = ('Fidelia Wambui', 'wambu@gmail.com', '0798453210', 'pass434')
 # insert_users(user2)
 
 
-def insert_sales(sales_details):
-    cur.execute(
-        "insert into sales(products_id,quantity)values(%s,%s)", (sales_details))
-    conn.commit()
-
-
-sales1 = (10, 5)
-sales2 = (1, 3)
-
-# insert_sales(sales1)
-# insert_sales(sales2)
-
-
 def insert_products(product_details):
     cur.execute(
-        "insert into products(name, buying_price, selling_price)values(%s,%s,%s)", (product_details))
+        """
+        INSERT INTO products (name, buying_price, selling_price)
+        VALUES (%s, %s, %s)
+        ON CONFLICT (name) DO NOTHING
+        """,
+        product_details
+    )
     conn.commit()
 
 
-product1 = ('HP laptop', 43000, 60000)
-product2 = ('Dell monitor', 55000, 75000)
+product3 = ('Samsung TV', 85000, 110000)
+product4 = ('Wireless Mouse', 800, 1500)
 
-# insert_products(product1)
-# insert_products(product2)
+insert_products(product3)
+insert_products(product4)
+
+
+def all_products():
+    cur = conn.cursor()
+    cur.execute("select * from products")
+    products = cur.fetchall()
+    return products
+
+
+print(all_products())
+
+
+def insert_sales(product_id, quantity):
+    # get product price and stock
+    cur.execute(
+        "SELECT selling_price, stock FROM products WHERE id=%s", (product_id,))
+    product = cur.fetchone()
+
+    if not product:
+        return "Product not found"
+
+    price, stock = product
+
+    if quantity > stock:
+        return "Not enough stock"
+
+    total = price * quantity
+
+    # insert sale
+    cur.execute("""
+        INSERT INTO sales (product_id, quantity, total)
+        VALUES (%s, %s, %s)
+    """, (product_id, quantity, total))
+
+    # reduce stock
+    cur.execute("""
+        UPDATE products
+        SET stock = stock - %s
+        WHERE id = %s
+    """, (quantity, product_id))
+
+    conn.commit()
+    return "Sale successful"
+
+
+def all_sales():
+    cur = conn.cursor()
+    cur.execute("select * from sales")
+    sales = cur.fetchall()
+    return sales
+
+
+print(all_sales())
+
+
+def get_stock():
+    cur.execute("SELECT * FROM stock")
+    return cur.fetchall()
+
+
+def get_user(username, password):
+    cur.execute(
+        "SELECT * FROM users WHERE username=%s AND password=%s",
+        (username, password)
+    )
+    return cur.fetchone()
+
+
+def create_user(username, password):
+    cur.execute(
+        "INSERT INTO users (username, password) VALUES (%s, %s)",
+        (username, password)
+    )
+    conn.commit()

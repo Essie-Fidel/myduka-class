@@ -1,11 +1,39 @@
 {% extends 'base.html' %}
 {% block title %} Products {% endblock %}
+
 {% block content %}
 
-<div>
-    <p>This is the product page</p>
+<h2 class="mt-4">Add Product</h2>
 
-    <p>any other product related content</p>
-</div>
+<form method="POST">
+    <input type="text" name="name" placeholder="Product Name"><br><br>
+    <input type="number" name="buying_price" placeholder="Buying Price"><br><br>
+    <input type="number" name="selling_price" placeholder="Selling Price"><br><br>
+    <input type="number" name="stock" placeholder="Stock"><br><br>
+    <button type="submit">Add Product</button>
+</form>
+
+<hr>
+
+<h2>All Products</h2>
+
+<table class="table">
+    <tr>
+        <th>Name</th>
+        <th>Buying</th>
+        <th>Selling</th>
+        <th>Stock</th>
+    </tr>
+
+    {% for product in products %}
+    <tr>
+        <td>{{ product[1] }}</td>
+        <td>{{ product[2] }}</td>
+        <td>{{ product[3] }}</td>
+        <td>{{ product[4] }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
 
 {% endblock %}

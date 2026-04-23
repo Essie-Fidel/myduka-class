@@ -1,5 +1,29 @@
 {% extends 'base.html' %}
+
 {% block title %} Home {% endblock %}
+
 {% block content %}
-<p>This is the home page</p>
+<div class="container" style="background-image: url(pos2.webp); background-size: cover; background-repeat: no-repeat;">
+    <div class="text-center mt-5 " style="background-color: burlywood;">
+
+        <h1 class="display-4">Welcome to MyDuka POS</h1>
+
+        <p class="lead mt-3">
+            Manage your products, sales, stock, and reports easily.
+        </p>
+
+        <hr class="my-4">
+
+        <p>Use the navigation bar to access different modules:</p>
+
+        <div class="mt-4">
+            <a href="/products" class="btn btn-primary m-2">Products</a>
+            <a href="/sales" class="btn btn-success m-2">Sales</a>
+            <a href="/stock" class="btn btn-warning m-2">Stock</a>
+            <a href="/dashboard" class="btn btn-dark m-2">Dashboard</a>
+        </div>
+
+    </div>
+</div>
+
 {% endblock %}

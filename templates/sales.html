@@ -1,11 +1,25 @@
 {% extends 'base.html' %}
 {% block title %} Sales {% endblock %}
+
 {% block content %}
 
-<div>
-    <p>This is the sales page</p>
+<h2 class="mt-4">Make Sale</h2>
 
-    <p>any other sales related content</p>
-</div>
+<form method="POST">
+
+    <label>Select Product:</label><br>
+    <select name="product_id">
+        {% for product in products %}
+        <option value="{{ product[0] }}">
+            {{ product[1] }} (Stock: {{ product[4] }})
+        </option>
+        {% endfor %}
+    </select><br><br>
+
+    <label>Quantity:</label><br>
+    <input type="number" name="quantity"><br><br>
+
+    <button type="submit">Sell</button>
+</form>
 
 {% endblock %}
