@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, redirect, session
-from database import cur, insert_products, insert_sales, get_stock, all_products, get_user
+from flask import Flask, render_template, request, redirect, url_for
+from database import cur, all_sales, get_stock, all_products, get_user, insert_products, insert_sales, insert_stock
 
 
 # creating an app instance
@@ -13,38 +13,55 @@ def home():  # view fuction
     return render_template("index.html")
 
 
-@app.route('/products', methods=['GET', 'POST'])
+@app.route('/products')
 def products():
-    if request.method == 'POST':
-        name = request.form['name']
-        buying_price = request.form['buying_price']
-        selling_price = request.form['selling_price']
-        stock = request.form['stock']
-
-        insert_products(name, buying_price, selling_price, stock)
-        return redirect('/products')
-
     products_data = all_products()
     return render_template("products.html", products=products_data)
 
 
-@app.route('/sales', methods=['GET', 'POST'])
-def sales():
+@app.route('/add_product', methods=['GET', 'POST'])
+def add_product():
     if request.method == 'POST':
-        product_id = request.form['product_id']
+        product_name = request.form['p_name']
+        buying_price = request.form['b_price']
+        selling_price = request.form['s_price']
+        new_product = (product_name, buying_price, selling_price)
+        insert_products(new_product)
+        print("product added successfully")
+    return redirect(url_for('products'))
+
+
+@app.route('/sales')
+def sales():
+    sales_data = all_sales()
+    return render_template("sales.html", sales=sales_data)
+
+
+@app.route('/add_sales', methods=['GET', 'POST'])
+def add_sales():
+    if request.method == 'POST':
+        products_id = int(request.form['p_id'])
         quantity = int(request.form['quantity'])
-
-        insert_sales(product_id, quantity)
-        return redirect('/sales')
-
-    products = all_products()
-    return render_template("sales.html", products=products)
+        insert_sales(products_id, quantity)
+        print('sale added successfully')
+    return redirect(url_for('sales'))
 
 
 @app.route('/stock')
 def stock():
     stock_data = get_stock()
     return render_template("stock.html", stock=stock_data)
+
+
+@app.route('/add_stock', methods=['GET', 'POST'])
+def add_stock():
+    if request.method == 'POST':
+        products_id = int(request.form['p_id'])
+        stock_quantity = int(request.form['s_quantity'])
+        new_stock = (products_id, stock_quantity)
+        insert_stock(new_stock)
+        print('stock added successfully')
+    return redirect(url_for('stock'))
 
 
 @app.route('/dashboard')
