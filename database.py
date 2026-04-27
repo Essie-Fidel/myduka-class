@@ -48,8 +48,8 @@ def insert_products(product_details):
 product3 = ('Samsung TV', 85000, 110000)
 product4 = ('Wireless Mouse', 800, 1500)
 
-insert_products(product3)
-insert_products(product4)
+# insert_products(product3)
+# insert_products(product4)
 
 
 def all_products():
@@ -59,7 +59,7 @@ def all_products():
     return products
 
 
-print(all_products())
+# print(all_products())
 
 
 def insert_sales(products_id, quantity):
@@ -77,7 +77,7 @@ def all_sales():
     return sales
 
 
-print(all_sales())
+# print(all_sales())
 
 
 def get_stock():

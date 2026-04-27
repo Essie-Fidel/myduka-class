@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from database import cur, all_sales, get_stock, all_products, get_user, insert_products, insert_sales, insert_stock
 
 
@@ -27,14 +27,15 @@ def add_product():
         selling_price = request.form['s_price']
         new_product = (product_name, buying_price, selling_price)
         insert_products(new_product)
-        print("product added successfully")
+        flash('product added successully', 'success')
     return redirect(url_for('products'))
 
 
 @app.route('/sales')
 def sales():
     sales_data = all_sales()
-    return render_template("sales.html", sales=sales_data)
+    products_data = all_products()
+    return render_template("sales.html", sales=sales_data, products=products_data)
 
 
 @app.route('/add_sales', methods=['GET', 'POST'])
@@ -43,14 +44,15 @@ def add_sales():
         products_id = int(request.form['p_id'])
         quantity = int(request.form['quantity'])
         insert_sales(products_id, quantity)
-        print('sale added successfully')
+        flash('sale added successfully', 'success')
     return redirect(url_for('sales'))
 
 
 @app.route('/stock')
 def stock():
     stock_data = get_stock()
-    return render_template("stock.html", stock=stock_data)
+    products_data = all_products()
+    return render_template("stock.html", stock=stock_data, products=products_data)
 
 
 @app.route('/add_stock', methods=['GET', 'POST'])
@@ -60,7 +62,7 @@ def add_stock():
         stock_quantity = int(request.form['s_quantity'])
         new_stock = (products_id, stock_quantity)
         insert_stock(new_stock)
-        print('stock added successfully')
+        flash('stock added successfully', 'success')
     return redirect(url_for('stock'))
 
 
