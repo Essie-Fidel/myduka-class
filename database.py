@@ -20,19 +20,6 @@ stock2 = (7, 4)
 # insert_stock(stock2)
 
 
-def insert_users(users_details):
-    cur.execute(
-        "insert into users(full_name,email,phone_number,password)values(%s,%s,%s,%s)", (users_details))
-    conn.commit()
-
-
-user1 = ('Regina W.', 'reggy@gmail.com', '0786541211', 'pass786')
-user2 = ('Fidelia Wambui', 'wambu@gmail.com', '0798453210', 'pass434')
-
-# insert_users(user1)
-# insert_users(user2)
-
-
 def insert_products(product_details):
     cur.execute(
         """
@@ -43,13 +30,6 @@ def insert_products(product_details):
         product_details
     )
     conn.commit()
-
-
-product3 = ('Samsung TV', 85000, 110000)
-product4 = ('Wireless Mouse', 800, 1500)
-
-# insert_products(product3)
-# insert_products(product4)
 
 
 def all_products():
@@ -85,17 +65,34 @@ def get_stock():
     return cur.fetchall()
 
 
-def get_user(username, password):
+def insert_user(users_details):
     cur.execute(
-        "SELECT * FROM users WHERE username=%s AND password=%s",
-        (username, password)
-    )
-    return cur.fetchone()
-
-
-def create_user(username, password):
-    cur.execute(
-        "INSERT INTO users (username, password) VALUES (%s, %s)",
-        (username, password)
-    )
+        "insert into users(full_name,email,phone_number,password)values(%s,%s,%s,%s)", (users_details))
     conn.commit()
+
+# how to check user using email
+
+
+def check_user_by_email(email):
+    cur.execute(
+        "SELECT * FROM users WHERE email = %s",
+        (email,)
+    )
+    user = cur.fetchone()
+    return user
+
+
+def available_stock(p_id):
+    cur.execute(
+        "select sum(stock_quantity) from stock where products_id=%s", (p_id,))
+    total_stock = cur.fetchone()[0] or 0
+
+    cur.execute("select sum (quantity) from sales where products_id=%s", (p_id,))
+    total_sold = cur.fetchone()[0] or 0
+    return total_stock-total_sold
+
+
+# check_stock = available_stock(134)
+# print(check_stock)
+# check_stock = available_stock(34)
+# print(check_stock)

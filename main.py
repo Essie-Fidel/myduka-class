@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from database import cur, all_sales, get_stock, all_products, get_user, insert_products, insert_sales, insert_stock
+from database import cur, all_sales, get_stock, all_products, insert_products, insert_sales, insert_stock, available_stock, insert_user, get_user
 
 
 # creating an app instance
@@ -43,6 +43,10 @@ def add_sales():
     if request.method == 'POST':
         products_id = int(request.form['p_id'])
         quantity = int(request.form['quantity'])
+        check_stock = available_stock(products_id)
+        if check_stock < quantity:
+            flash("insufficient stock can't complete sale", 'danger')
+            return redirect(url_for('sales'))
         insert_sales(products_id, quantity)
         flash('sale added successfully', 'success')
     return redirect(url_for('sales'))
@@ -66,60 +70,23 @@ def add_stock():
     return redirect(url_for('stock'))
 
 
-@app.route('/dashboard')
-def dashboard():
-    if 'user' not in session:
-        return redirect('/login')
-
-    cur.execute("SELECT COALESCE(SUM(total), 0) FROM sales")
-    total_sales = cur.fetchone()[0]
-
-    cur.execute("SELECT COUNT(*) FROM products")
-    total_products = cur.fetchone()[0]
-
-    cur.execute("SELECT * FROM products WHERE stock < 5")
-    low_stock = cur.fetchall()
-
-    return render_template(
-        "dashboard.html",
-        sales=total_sales,
-        products=total_products,
-        low_stock=low_stock
-    )
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    message = ""
-
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-
-        user = get_user(username, password)
-
-        if user:
-            session['user'] = username
-            return redirect('/dashboard')
-
-        else:
-            message = "Invalid credentials"
-
-    return render_template("login.html", message=message)
+@app.route('/register')
+def user():
+    user_data = get_user()
+    return render_template('register.html', users=user_data)
 
 
 @app.route('/register', methods=['GET', 'POST'])
-def register():
-    message = ""
-
+def create_user():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-
-        create_user(username, password)
-        message = "Account created successfully"
-
-    return render_template("register.html", message=message)
+        full_name = request.form['f_name']
+        email_address = request.form['email']
+        phone_number = int(request.form['phone'])
+        password = request.form['pass']
+        new_user = (full_name, email_address, phone_number, password)
+        insert_user(new_user)
+        flash("Account created successfully!")
+        return redirect(url_for('create_user'))
 
 
 if __name__ == "__main__":
