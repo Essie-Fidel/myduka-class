@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from database import cur, all_sales, get_stock, all_products, insert_products, insert_sales, insert_stock, available_stock, insert_user, get_user
+from database import cur, all_sales, get_stock, all_products, insert_products, insert_sales, insert_stock, available_stock, insert_user
 
 
 # creating an app instance
@@ -70,12 +70,6 @@ def add_stock():
     return redirect(url_for('stock'))
 
 
-@app.route('/register')
-def user():
-    user_data = get_user()
-    return render_template('register.html', users=user_data)
-
-
 @app.route('/register', methods=['GET', 'POST'])
 def create_user():
     if request.method == 'POST':
@@ -87,6 +81,7 @@ def create_user():
         insert_user(new_user)
         flash("Account created successfully!")
         return redirect(url_for('create_user'))
+    return render_template('register.html')
 
 
 if __name__ == "__main__":
