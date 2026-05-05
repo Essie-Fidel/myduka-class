@@ -9,23 +9,64 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- datatables css links -->
+
+    <!-- DataTables -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.7/css/dataTables.bootstrap5.css">
-    <!-- datatables js links -->
+
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/2.3.7/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.3.7/js/dataTables.bootstrap5.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* HERO SECTION (full width background) */
+        .hero {
+            width: 100%;
+            height: calc(100vh - 100px);
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+            url("{{ url_for('static', filename='bg.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* TEXT ANIMATIONS */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .fade-in.delay-1 {
+            animation-delay: 0.5s;
+        }
+
+        .fade-in.delay-2 {
+            animation-delay: 1s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 
 <body>
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
         <div class="container-fluid">
 
-            <a class="navbar-brand" href="/">MyDuka </a>
+            <a class="navbar-brand" href="/">MyDuka</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
                 <span class="navbar-toggler-icon"></span>
@@ -38,6 +79,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/">Home</a>
                     </li>
+
+                    {% if 'email' not in session %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Register</a>
+                    </li>
+                    {% else %}
 
                     <li class="nav-item">
                         <a class="nav-link" href="/products">Products</a>
@@ -55,17 +106,10 @@
                         <a class="nav-link" href="/dashboard">Dashboard</a>
                     </li>
 
-                </ul>
-
-                <ul class="navbar-nav">
-
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">Login</a>
+                        <a class="nav-link" href="/logout">Logout</a>
                     </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/register">Register</a>
-                    </li>
+                    {% endif %}
 
                 </ul>
 
@@ -73,8 +117,9 @@
         </div>
     </nav>
 
-    <div>
-        {% with messages= get_flashed_messages(with_categories=true) %}
+    <!-- FLASH MESSAGES -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         {% for category, message in messages %}
         <div class="alert alert-{{category}} alert-dismissible" role="alert">
@@ -86,24 +131,25 @@
         {% endwith %}
     </div>
 
-    <!-- PAGE CONTENT -->
+    <!-- FULL WIDTH HERO (only homepage will use it) -->
+    {% block hero %}{% endblock %}
+
+    <!-- NORMAL PAGE CONTENT -->
     <div class="container mt-4">
-
-        {% block content %}
-        <!-- pages will load here -->
-        {% endblock %}
-
+        {% block content %}{% endblock %}
     </div>
 
     <!-- FOOTER -->
-    <footer class="text-center mt-5 mb-3  text-light bg-dark py-xl-5">
-        <p>shop with us</p>
-        &copy 2026 MyDuka.All rights reserved
+    <footer class="text-center mt-5 mb-3 text-light bg-dark py-4">
+        <p>Shop with us</p>
+        &copy; 2026 MyDuka. All rights reserved
     </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script>new DataTable('#example');</script>
+    <script>
+        new DataTable('#example');
+    </script>
 
 </body>
 

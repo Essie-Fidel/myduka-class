@@ -236,3 +236,11 @@ def create_user(username, password):
         (username, password)
     )
     conn.commit()
+     <p class = "lead mt-3" >
+            your smart solution for managing sales, stock, and business growth with ease.
+        </p>
+
+        <hr class="my-4">
+
+        <p>Technology meets simplicity to power your business success.</p>
+
