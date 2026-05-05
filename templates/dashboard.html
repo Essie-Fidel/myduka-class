@@ -3,8 +3,65 @@
 
 {% block content %}
 
-<h2 class="mt-4">Dashboard</h2>
+<h1 class="mt-4 text-danger text-decoration-underline">DASHBOARD</h1>
 
-this is the dashboard
+<div>
+    <canvas id="line-chart" width="800" height="450"></canvas>
+</div>
+<div>
+    <canvas id="bar-chart-grouped" width="800" height="450"></canvas>
+</div>
+<!-- line chart[sales_Per _day,profit_per_day] -->
+<script>
+    new Chart(document.getElementById("line-chart"), {
+        type: 'line',
+        data: {
+            labels: {{ day | safe}},
+        datasets: [{
+            data: {{ prof_day | safe}},
+        label: "profit per day",
+        borderColor: "#3e95cd",
+        fill: false
+            }, {
+            data: {{ day_sales | safe}},
+        label: "sales per day",
+        borderColor: "#8e5ea2",
+        fill: false
+            }
+    ]
+        },
+        options: {
+        title: {
+            display: true,
+            text: 'PROFIT AND SALES PER DAY (Ksh.)'
+        }
+    }
+    });
+
+    // bar chart
+    new Chart(document.getElementById("bar-chart-grouped"), {
+        type: 'bar',
+        data: {
+            labels: {{ product_names | safe}},
+        datasets: [
+        {
+            label: "Sales per product",
+            backgroundColor: "#3e95cd",
+            data: {{ p_sales | safe}}
+                }, {
+            label: "Profit per product",
+            backgroundColor: "#8e5ea2",
+            data: {{ prof_product | safe}}
+                }
+    ]
+        },
+        options: {
+        title: {
+            display: true,
+            text: 'PROFIT AND SALES PER PRODUCT (Ksh.)'
+        }
+    }
+    });
+</script>
 
 {% endblock %}

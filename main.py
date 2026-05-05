@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from database import cur, all_sales, get_stock, all_products, insert_products, insert_sales, insert_stock, available_stock, insert_user, check_user_exists
+from database import cur, all_sales, get_stock, all_products, insert_products, insert_sales, insert_stock, available_stock, insert_user, check_user_exists, sales_per_day, sales_per_product, profit_per_day, profit_per_product
 from flask_bcrypt import Bcrypt
 from functools import wraps
 
@@ -27,7 +27,7 @@ def login_required(f):
 
 
 @app.route('/products')
-# @login_required
+@login_required
 def products():
     products_data = all_products()
     return render_template("products.html", products=products_data)
@@ -131,7 +131,19 @@ def login():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    sales_product = sales_per_product()
+    sales_day = sales_per_day()
+    profit_product = profit_per_product()
+    profit_day = profit_per_day()
+
+    product_names = [i[0] for i in sales_product]
+    p_sales = [float(i[1]) for i in sales_product]
+    prof_product = [float(i[1]) for i in profit_product]
+
+    day = [str(i[1]) for i in sales_day]
+    prof_day = [float(i[1]) for i in profit_day]
+    day_sales = [float(i[1]) for i in sales_day]
+    return render_template('dashboard.html', product_names=product_names, p_sales=p_sales, prof_product=prof_product, day=day, prof_day=prof_day, day_sales=day_sales)
 
 
 @app.route('/logout')

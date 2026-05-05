@@ -102,3 +102,49 @@ def available_stock(p_id):
 # print(check_stock)
 # check_stock = available_stock(34)
 # print(check_stock)
+
+
+def sales_per_product():
+    cur.execute("""
+        SELECT products.name,
+               SUM(products.selling_price * sales.quantity) AS total_sales
+        FROM products
+        JOIN sales ON products.id = sales.products_id
+        GROUP BY products.name;
+    """)
+    return cur.fetchall()
+
+
+def sales_per_day():
+    cur.execute("""
+        SELECT DATE(sales.created_at) AS day,
+               SUM(products.selling_price * sales.quantity) AS total_sales
+        FROM products
+        JOIN sales ON products.id = sales.products_id
+        GROUP BY day
+        ORDER BY day;
+    """)
+    return cur.fetchall()
+
+
+def profit_per_product():
+    cur.execute("""
+        SELECT products.name,
+               SUM((products.selling_price - products.buying_price) * sales.quantity) AS profit
+        FROM products
+        JOIN sales ON products.id = sales.products_id
+        GROUP BY products.name;
+    """)
+    return cur.fetchall()
+
+
+def profit_per_day():
+    cur.execute("""
+        SELECT DATE(sales.created_at) AS day,
+               SUM((products.selling_price - products.buying_price) * sales.quantity) AS total_profit
+        FROM products
+        JOIN sales ON products.id = sales.products_id
+        GROUP BY day
+        ORDER BY day;
+    """)
+    return cur.fetchall()

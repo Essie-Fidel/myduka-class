@@ -2,77 +2,97 @@
 {% block title %} Sales {% endblock %}
 
 {% block content %}
-
 {% for sale in sales_data %}
+
 <p>{{sales}}</p>
+
 {% endfor %}
 
-<h2 class="mt-4">Sales History</h2>
+<!-- PAGE TITLE -->
+<div class="text-center my-4">
+    <h2 class="fw-bold text-danger text-decoration-underline">📊 Sales History</h2>
+    <p class="text-dark-emphasis">Track all your sales in real time</p>
+</div>
 
-<div>
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Add Sales
+<!-- ADD SALES BUTTON -->
+<div class="d-flex justify-content-end mb-3">
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        + Add Sale
     </button>
+</div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add a sale</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="post" action="/add_sales">
-                        <div class="mb-3">
-                            <select class="form-select" name="p_id" aria-label="Default select example">
-                                <option selected>select</option>
-                                {% for product in products %}
-                                <option value="{{ product[0] }}">{{ product[1] }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Quantity</label>
-                            <input type="number" name="quantity" class="form-control" id="exampleInputPassword1">
-                        </div>
+<!-- TABLE CARD -->
+<div class="card shadow-lg bg-dark text-light">
+    <div class="card-body">
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Add sale</button>
-                        </div>
-                    </form>
-                </div>
+        <table class="table table-dark table-hover table-striped">
+            <thead class="table-danger">
+                <tr>
+                    <th>ID</th>
+                    <th>Product ID</th>
+                    <th>Quantity</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
 
-            </div>
-        </div>
+            <tbody>
+                {% for sale in sales %}
+                <tr>
+                    <td>{{ sale[0] }}</td>
+                    <td>{{ sale[1] }}</td>
+                    <td>{{ sale[2] }}</td>
+                    <td>{{ sale[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
     </div>
 </div>
 
+<!-- MODAL -->
+<div class="modal fade" id="exampleModal" tabindex="-1">
+    <div class="modal-dialog">
 
-<table class="table table-striped">
+        <div class="modal-content bg-dark text-light">
 
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Product ID</th>
-            <th>Quantity</th>
-            <th>Timestamp</th>
-        </tr>
-    </thead>
+            <div class="modal-header border-danger">
+                <h5 class="modal-title text-danger">Add a Sale</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
 
-    <tbody>
-        {% for sale in sales %}
-        <tr>
-            <td>{{ sale[0] }}</td>
-            <td>{{ sale[1] }}</td>
-            <td>{{ sale[2] }}</td>
-            <td>{{ sale[3] }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
+            <div class="modal-body">
 
-</table>
+                <form method="post" action="/add_sales">
+
+                    <!-- PRODUCT SELECT -->
+                    <div class="mb-3">
+                        <label class="form-label">Select Product</label>
+                        <select class="form-select" name="p_id" required>
+                            <option disabled selected>Choose product</option>
+                            {% for product in products %}
+                            <option value="{{ product[0] }}">{{ product[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- QUANTITY -->
+                    <div class="mb-3">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" name="quantity" class="form-control" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-danger w-100">
+                        Save Sale
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 {% endblock %}

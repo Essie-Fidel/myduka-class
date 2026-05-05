@@ -2,73 +2,95 @@
 {% block title %} Stock {% endblock %}
 
 {% block content %}
-
 {% for stock in stock_data %}
-
 <p>{{stock}}</p>
-
 {% endfor %}
 
+<!-- PAGE TITLE -->
+<div class="text-center my-4">
+    <h1 class="fw-bold text-danger text-decoration-underline">STOCK OVERVIEW</h1>
+    <p class="text-dark-emphasis">Manage your inventory levels</p>
+</div>
 
-<h2 class="mt-4">Stock Overview</h2>
-<div>
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Add Stock
+<!-- ADD STOCK BUTTON -->
+<div class="d-flex justify-content-end mb-3">
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        + Add Stock
     </button>
+</div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add stock</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="post" action="/add_stock">
-                        <div class="mb-3">
-                            <select class="form-select" name="p_id" aria-label="Default select example">
-                                <option selected>select</option>
-                                {% for product in products %}
-                                <option value="{{ product[0] }}">{{ product[1] }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+<!-- TABLE CARD -->
+<div class="card shadow-lg bg-dark text-light">
+    <div class="card-body">
 
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Stock_quantity</label>
-                            <input type="number" name="s_quantity" class="form-control" id="exampleInputPassword1">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Add stock</button>
-                        </div>
-                    </form>
-                </div>
+        <table class="table table-dark table-hover table-striped">
+            <thead class="table-danger">
+                <tr>
+                    <th>ID</th>
+                    <th>Product ID</th>
+                    <th>Stock Quantity</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
 
-            </div>
-        </div>
+            <tbody>
+                {% for item in stock %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
     </div>
 </div>
 
-<table class="table">
-    <tr>
-        <th>ID</th>
-        <th>Product ID</th>
-        <th>Stock_quantity</th>
-        <th>Timestamp</th>
+<!-- MODAL -->
+<div class="modal fade" id="exampleModal" tabindex="-1">
+    <div class="modal-dialog">
 
-    </tr>
+        <div class="modal-content bg-dark text-light">
 
-    {% for item in stock %}
-    <tr>
-        <td>{{ item[0] }}</td>
-        <td>{{ item[1] }}</td>
-        <td>{{ item[2] }}</td>
-        <td>{{ item[3] }}</td>
-    </tr>
-    {% endfor %}
-</table>
+            <div class="modal-header border-danger">
+                <h5 class="modal-title text-danger">Add Stock</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <form method="post" action="/add_stock">
+
+                    <!-- PRODUCT SELECT -->
+                    <div class="mb-3">
+                        <label class="form-label">Select Product</label>
+                        <select class="form-select" name="p_id" required>
+                            <option disabled selected>Choose product</option>
+                            {% for product in products %}
+                            <option value="{{ product[0] }}">{{ product[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- QUANTITY -->
+                    <div class="mb-3">
+                        <label class="form-label">Stock Quantity</label>
+                        <input type="number" name="s_quantity" class="form-control" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-danger w-100">
+                        Save Stock
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 {% endblock %}

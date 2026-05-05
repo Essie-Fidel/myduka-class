@@ -3,32 +3,55 @@
 
 {% block content %}
 
-<h2 class="mt-4">Register</h2>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 75vh;">
 
-{% if message %}
-<p style="color:green;">{{ message }}</p>
-{% endif %}
+    <div class="card shadow-lg bg-dark text-light p-4" style="width: 100%; max-width: 450px;">
 
-<div>
-    <form action="/register" method='POST'>
-        <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Full_Name</label>
-            <input type="text" name="f_name" class="form-control" id="exampleInputPassword1">
+        <!-- HEADER -->
+        <div class="text-center mb-4">
+            <h2 class="fw-bold text-danger">Create Account</h2>
+            <p class="text-muted">Join MyDuka and start managing your business</p>
         </div>
-        <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Email Address</label>
-            <input type="email" name="email" class="form-control" id="exampleInputEmail1">
+
+        <!-- FORM -->
+        <form action="/register" method="POST">
+
+            <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="f_name" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Phone Number</label>
+                <input type="text" name="phone" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="pass" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100">
+                Register
+            </button>
+
+        </form>
+
+        <!-- LOGIN LINK -->
+        <div class="text-center mt-3">
+            <small class="text-muted">
+                Already have an account?
+                <a href="/login" class="text-danger">Login</a>
+            </small>
         </div>
-        <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">Phone Number</label>
-            <input type="tel" name="phone" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-        </div>
-        <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Password</label>
-            <input type="password" name="pass" class="form-control" id="exampleInputPassword1">
-        </div>
-        <button type="submit" class="btn btn-primary">Register</button>
-    </form>
+
+    </div>
+
 </div>
 
 {% endblock %}
